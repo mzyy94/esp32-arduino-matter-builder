@@ -5,6 +5,9 @@ on:
     branches:
       - master
 
+env:
+  CXXFLAGS: -std=c++17
+
 jobs:
   build:
     runs-on: ubuntu-22.04
