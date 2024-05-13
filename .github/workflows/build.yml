@@ -1,0 +1,21 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build library
+        run: ./build.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: esp32-arduino-matter
+          path: exported_artifacts/esp32-arduino-matter
+          if-no-files-found: error
