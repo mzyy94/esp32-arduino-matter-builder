@@ -7,14 +7,36 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Build library
-        run: ./build.sh
-      - uses: actions/upload-artifact@v4
+      - name: Prepare
+        run: |
+          sudo apt update
+          sudo apt install -y git gcc g++ pkg-config libssl-dev libdbus-1-dev \
+          libglib2.0-dev libavahi-client-dev ninja-build python3-venv python3-dev \
+          python3-pip unzip libgirepository1.0-dev libcairo2-dev libreadline-dev libusb-1.0-0-dev cmake
+      - name: Download
+        run: |
+          cp scripts/download.sh ./
+          ./download.sh
+      - name: Install
+        run: |
+          cp scripts/prepare/install.sh ./
+          ./install.sh
+      - name: Setup
+        run: |
+          cp scripts/build/setup_env.sh ./
+          . ./setup_env.sh
+          pip3 install lark stringcase
+      - name: Build
+        run: |
+          ./scripts/prepare/apply_patch.sh
+          ./scripts/build_locally.sh
+      - name: Upload
+        uses: actions/upload-artifact@v4
         with:
           name: esp32-arduino-matter
           path: exported_artifacts/esp32-arduino-matter
