@@ -6,4 +6,5 @@
 FIND="cfg = WIFI_INIT_CONFIG_DEFAULT();"
 REPLACE="${FIND}\n    cfg.feature_caps &= ~CONFIG_FEATURE_CACHE_TX_BUF_BIT;"
 perl -i -pe "s/\Q$FIND/$REPLACE/" tools/esp-matter/connectedhomeip/connectedhomeip/src/platform/ESP32/ESP32Utils.cpp
+patch -d tools/esp-matter/connectedhomeip/connectedhomeip -p1 < 0001-Remove-LWIP_TCPIP_CORE_LOCKING.patch
 echo $?

@@ -1,0 +1,36 @@
+diff --git a/config/esp32/components/chip/Kconfig b/config/esp32/components/chip/Kconfig
+index db6edc2d9a..448fcd4b1c 100644
+--- a/config/esp32/components/chip/Kconfig
++++ b/config/esp32/components/chip/Kconfig
+@@ -195,7 +195,7 @@ menu "CHIP Core"
+ 
+         config ENABLE_LWIP_THREAD_SAFETY
+             bool "Enable LwIP Thread safety options"
+-            default y
++            default n
+             select LWIP_TCPIP_CORE_LOCKING
+             select LWIP_CHECK_THREAD_SAFETY
+             help
+diff --git a/src/inet/InetInterface.cpp b/src/inet/InetInterface.cpp
+index 4a404a29db..8483b9ef5f 100644
+--- a/src/inet/InetInterface.cpp
++++ b/src/inet/InetInterface.cpp
+@@ -208,9 +208,6 @@ CHIP_ERROR InterfaceId::InterfaceNameToId(const char * intfName, InterfaceId & i
+ 
+ bool InterfaceIterator::Next()
+ {
+-    // Lock LwIP stack
+-    LOCK_TCPIP_CORE();
+-
+     // Verify the previous netif is still on the list if netifs.  If so,
+     // advance to the next nextif.
+     struct netif * prevNetif = mCurNetif;
+@@ -227,9 +224,6 @@ bool InterfaceIterator::Next()
+         }
+     }
+ 
+-    // Unlock LwIP stack
+-    UNLOCK_TCPIP_CORE();
+-
+     return mCurNetif != nullptr;
+ }
